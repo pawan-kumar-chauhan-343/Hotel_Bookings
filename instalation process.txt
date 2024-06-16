@@ -1,0 +1,4 @@
+// 1) install react-router-dom
+// 2) if node_modules not exists then run commande => npm i react-ScriptProcessorNode
+// 3) first run json server => npx json-server --watch db.json --port 3004
+// 4) run command to run application = > npm start
