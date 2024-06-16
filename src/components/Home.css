@@ -1,0 +1,18 @@
+.card{
+    background-image: url('./back.png');
+    background-size: cover;
+
+    width: 50rem;
+          margin-top: 150px;
+          margin-left: 300px;
+          padding: 50px;
+          padding-left: 50px;
+          padding-right: 50px;
+}
+
+.card-text{
+    font-family: "cursive";
+    font-weight: 700; 
+    font-size: larger; 
+    color: crimson;  
+}
