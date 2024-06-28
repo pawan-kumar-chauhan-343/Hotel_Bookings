@@ -1,53 +1,87 @@
 import React from "react";
-import { useState } from "react";
-//import axios from "axios";
-//import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import "./bookings.css"
 
-const Bookings = () => {
-  //const navigate = useNavigate();
-  const [bookings, setBookings] = useState([]);
-  //State to capture the error message when the call made to get all the bookings, fails.
-  const [errMsg, setErrMessage] = useState("");
-  // State to capture the  message when the call made to delete the given booking is successful.
-  const [deleteSuccess, setDeleteSuccess] = useState("");
-  
-
-  //useEffect can be used to fetch the booking details when the component is mounted. Hence the data obtained is to be updated in the corresponding state.
-  //in case of failure to fetch data the .catch block should generate a message stating "Something went Wrong"
-  //function to delete the service with given id
-  const handleAction = (id) => {
-    // Delete the booking from the database by placing HTTP delete request to the
-    // url - http://localhost:4000/bookings/<plan ID>
-    // If the Axios call is successful, generate an alert "The booking for Booking ID :" <id > " is deleted" 
-    // If the Axios call fails, generate alert "Something went wrong".
+const Bookings = ({sendDataToApp}) => {
+  const navigate=useNavigate()
+  const [reschudel, setReschudel]=useState("")
+  const [data, setData] = useState("")
+  const userId = localStorage.getItem("userId")//From local storage
+  const [cancleId, setCancle] = useState()
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3004/bookings');
+      setData(response.data);
+      console.log(data)
+    } catch (error) {
+      alert(error.message);
+    }
   };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // ======================================
+  let hotelsId = []
+  for (let booked_hotel of data) {
+    if (booked_hotel.userId === userId) {
+      hotelsId.push(booked_hotel)
+    }
+  }
+  //  ==========================================
+  //delete Hotel Booking
+  if (cancleId) {
+        var answer = window.confirm("Do you want to cancel. if yes click 'OK' if not click 'Cancel' ");
+        if(answer){
+          axios.delete(`http://localhost:3004/bookings/${cancleId}`)
+          .then(() => alert('Cancled Please Refresh:'))
+          .catch(()=>alert("faild to delete"))
+        }else{
+          alert("Not cancel")
+        }   
+
+  }
+//  ======================================================
+
+  if(reschudel){
+    sendDataToApp(reschudel)
+    localStorage.setItem("bookingId", reschudel) // storing data in local storage
+    reschudel?(navigate("/reschedule")):alert("reschedule: Please refresh")
+  }
   return (
-    <>
-      {/* display individual bookings in Cards and apply some inline styling */}
+    <div className="booking_main">
+      {!hotelsId[0] ? (<h2 style={{ margin: "30px 0px 0px 20px" }}>You don't have hotel booking Please book hotel <Link to="/hotels">Book Hotel</Link></h2>) : ""}
 
-      <h4>booking.id</h4>
+      {
+        hotelsId.map((booking) => (
+          <div key={booking.id} className="booking" >
+            <h1 className="hotel_name">{booking.hotelName}</h1>
 
-      <div>
-        <p>Hotel Name : </p>
-        <p>Start Date :</p>
-        <p>End Date :</p>
-        <p>No of Persons :</p>
-        <p>No of Rooms :</p>
-        <p>Type of Rooms :</p>
 
-        <button className="btn btn-secondary" data-testid="Reschedule-button">
-          Reschedule
-        </button>
-        {/* generate necessary code to call the function to handle reschedule opration of the user */}
-        <br />
-        <br />
+            <div>
+              <h4><b>Booking ID :</b> {booking.id}</h4>
+              <p><b>Start Date :</b> {booking.startDate}</p>
+              <p><b>End Date : </b> {booking.endDate}</p>
+              <p><b>No of Persons :</b> {booking.noOfPersons}</p>
+              <p><b>No of Rooms :</b> {booking.noOfRooms}</p>
+              <p><b>Type of Rooms :</b> {booking.typeOfRoom}</p>
 
-        <button className="btn btn-secondary" data-testid="delete-button">
-          Cancel
-        </button>
-        {/* generate necessary code to call the function to handle delete opration of the user and set the successful delete message */}
-      </div>
-    </>
+              <button className="btn btn-primary" data-testid="Reschedule-button" onClick={()=>setReschudel(booking.id)}>
+                Reschedule
+              </button>
+              {/* generate necessary code to call the function to handle reschedule opration of the user */}
+              <br />
+              <br />
+
+              <button className="btn btn-danger" data-testid="delete-button" onClick={() => setCancle(booking.id)}> Cancel </button>
+              {/* generate necessary code to call the function to handle delete opration of the user and set the successful delete message */}
+            </div>
+          </div>
+        ))
+      }
+    </div>
   );
 };
 
