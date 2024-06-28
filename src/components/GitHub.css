@@ -1,0 +1,54 @@
+.bg_gitHub{
+    background-image: url("/public//image/git_background.jpg");
+    color: white;
+    padding: 0;
+    margin: 100px 100px;
+    
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 0 150px 0 150px; 
+}
+body{
+    background-image: url("/public//image/hotel_background.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.gitHub{
+    display: flex;
+    padding: 30px;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.692);
+    border-radius: 0 150px 0 150px; 
+}
+.image_gitHub{
+    width: 200px;
+    border-radius: 50%;
+}
+.name_link_gitHub{
+    display: flex;
+    justify-content: space-around;
+    font-weight: bolder;
+    font-size: 20px;
+}
+.link_gitHub{
+    text-decoration: none;
+}
+.link_gitHub:hover{
+text-decoration:underline ;
+color: rgb(233, 13, 241);
+}
+.bio_gitHub{
+    color: rgb(249, 5, 176);
+    text-transform: capitalize;
+    font-weight: bold;
+}
+.details_gitHub{
+    padding: 20px;
+}
+.b_gitHub{
+    color: rgb(208, 0, 255);
+}
+.image_div_gitHub , .details_gitHub{
+    min-width:200px ;
+}
