@@ -1,31 +1,70 @@
-import React, { useState } from "react";
-//import axios from "axios";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Reschedule = () => {
-  //State to hold the form details that needs to be added .When user enters the values the state gets updated
-  const [state, setState] = useState({
+const Reschedule = ({ dataFromBooking }) => {
+  let bookingId=localStorage.getItem("bookingId") // getting bookingid from local storage
+
+  console.log("first",bookingId,"second",dataFromBooking )
+  
+  if (dataFromBooking){
+    var dataFromBooking=dataFromBooking;
+  }else{
+    var dataFromBooking=bookingId
+  }
+  const navigate = useNavigate();
+  const [item, setItem] = useState({
     startDate: "",
     endDate: "",
   });
-  //state variable to capture the success Message once the rescheduling is completed successfully.
-  const [Message, setMessage] = useState("");
+  const [errors, setErrors] = useState({}); // State for errors
 
-  const handleSubmit = (event) => {
-    // 1. This method will be invoked when user clicks on 'Book' button.
-    // 2. You should prevent page reload on submit
-    // 3.  If all the form fields values are entered then make axios call to
-    // "http://localhost:4000/bookings/:userId" and pass the appropriate state as data to the axios call
-    // 4. If the axios call is successful, assign the below string to successMessage state:
-    //   "Reschedule is successfully done"
-    // 5. If the axios call is not successful, assign the error message to "Something went wrong"
+  // Fetch booking data
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(`http://localhost:3004/bookings/${dataFromBooking}`);
+      setItem(response.data);
+    };
+    fetchData();
+  }, [dataFromBooking]); // Refetch data when itemId changes
+
+
+  const change = (e) => {
+    const { name, value } = e.target;
+    setItem({ ...item, [name]: value });
+    setErrors({}); // Clear errors on change
   };
 
-  const change = (event) => {
-    /*
-       1. This method will be invoked whenever the user changes the value of any form field. This method should also validate the form fields.
-       2. 'event' input parameter will contain both name and value of the form field.
-       3. Set state using the name and value recieved from event parameter 
-       */
+  const validateDates = () => {
+    const newErrors = {};
+    if (!item.startDate) {
+      newErrors.startDate = "Start Date is required.";
+    } else if (new Date(item.startDate) < new Date()) {
+      newErrors.startDate = "Start Date must be in the future.";
+    }
+
+    if (!item.endDate) {
+      newErrors.endDate = "End Date is required.";
+    } else if (new Date(item.startDate) >= new Date(item.endDate)) {
+      newErrors.endDate = "End Date must be after Start Date.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!validateDates()) return; // Exit if validation fails
+
+    try {
+      await axios.put(`http://localhost:3004/bookings/${dataFromBooking}`, item);
+      alert("Data update successfully");
+      navigate("/bookings");
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -37,18 +76,13 @@ const Reschedule = () => {
         >
           <div className="row p-3">
             <div className="col-lg-6 "></div>
-            <div className="col-lg-6" style={{ backgroundColor: "#ebe7e7" }}>
-              <form>
-                {/*
-                1. Display successMessage or errorMessage after submission of form
-                2. Form should be controlled
-                3. Event handling methods should be binded appropriately
-                4. Invoke the appropriate method on form submission
-                */}
+            <div className="col-lg-6" style={{ backgroundColor: "rgba(0, 0, 0, 0.76)", color:"white" }}>
+              <form onSubmit={handleSubmit}>
                 <div
                   className="navbar-brand"
                   style={{
-                    color: "brown",
+                    color: "white", 
+                    fontFamily:"cursive",
                     textAlign: "center",
                     fontFamily: "sans-serif",
                     fontWeight: "bolder",
@@ -67,30 +101,40 @@ const Reschedule = () => {
                     type="Date"
                     className="form-control"
                     name="startDate"
+                    onChange={change}
                   />
+                  {errors.startDate && <p className="text-danger">{errors.startDate}</p>}
                 </div>
                 <div className="mb-2 mt-2">
                   <label className="form-label">End Date:</label>
-                  <input type="Date" className="form-control" name="endDate" />
+                  <input
+                    type="Date"
+                    className="form-control"
+                    name="endDate"
+                    onChange={change}
+                  />
+                  {errors.endDate && <p className="text-danger">{errors.endDate}</p>}
                 </div>
                 <br />
                 <button
                   type="submit"
                   className="btn mb-2 d-block text-white"
                   style={{ backgroundColor: "#88685e", width: "100%" }}
+                  disabled={Object.keys(errors).length > 0} // Disable button if errors exist
                 >
                   Reschedule
                 </button>
-                {/*Using the concept of conditional rendering,display success message, error messages related to axios calls */}
+
+                {/* Using the concept of conditional rendering, display success message, error messages related to axios calls */}
                 <div data-testid="Message" className="text-danger"></div>
                 <br />
               </form>
             </div>
           </div>
         </div>
-      </div>
+        </div>
     </>
   );
 };
-
-export default Reschedule;
+ 
+export default Reschedule;     
