@@ -4,8 +4,24 @@ font-family:  cursive;
 }
 nav {
   background-color: purple;
+
 }
 .nav-link{
   color: white !important; 
-  
+  transition: all 1s;
+}
+.nav-link:hover{
+  font-weight: bold !important;
+  color: rgb(19, 126, 8) !important;
+  text-decoration: underline !important;
+  padding-left: 10px;  
+}
+.nav-link:active{
+  background-color: rgb(56, 6, 34);
+ 
+}
+.active{
+  font-weight: bold !important;
+  color: red !important;
+  text-decoration: underline !important;
 }
