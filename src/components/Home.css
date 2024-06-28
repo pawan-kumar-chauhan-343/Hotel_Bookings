@@ -1,18 +1,20 @@
-.card{
-    background-image: url('./back.png');
+.card_h{
+font-family: cursive;
+
+font-weight: 700;
+font-size: 30px;
+color: rgb(255, 255, 255);
+border-radius: 0 120px 0 120px !important ; 
+background-color: rgba(0, 0, 0, 0.76);
+padding: 20px 70px;
+
+}
+.card_Mh{
+    background-image: url("/public//image/git_background.jpg") !important;
+    background-repeat: no-repeat;
     background-size: cover;
+    border-radius: 0 120px 0 120px; 
+margin: 150px 70px;
 
-    width: 50rem;
-          margin-top: 150px;
-          margin-left: 300px;
-          padding: 50px;
-          padding-left: 50px;
-          padding-right: 50px;
 }
 
-.card-text{
-    font-family: "cursive";
-    font-weight: 700; 
-    font-size: larger; 
-    color: crimson;  
-}
