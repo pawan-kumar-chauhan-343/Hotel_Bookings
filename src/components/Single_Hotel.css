@@ -1,0 +1,39 @@
+.hotel_ss{
+    background-image: url("/public/image/git_background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+}
+.hotel_s{
+    background-color: rgba(0, 0, 0, 0.818);
+}
+.hotel_name_s{
+    text-transform: uppercase;
+    text-align: center;
+    padding: 20px 0px;
+}
+.a_s{
+    text-decoration: none;
+    transition: all 0.5s;
+}
+.a_s:hover{
+    text-decoration: underline;
+    color: rgb(220, 5, 206);
+}
+.a_s:active{
+    color: rgb(223, 19, 19);
+}
+.image_ss{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 10px;
+}
+.image_s{
+    margin: 10px;
+    min-height: 300px;
+    box-shadow: rgba(214, 216, 143, 0.3) 0px 19px 38px, rgba(197, 187, 187, 0.22) 0px 15px 12px;
+}
+.details_s{
+    margin: 20px;
+}
