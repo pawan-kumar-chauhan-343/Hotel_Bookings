@@ -1,41 +1,90 @@
+import axios from "axios";
 import React, { useState } from "react";
-//import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  // const navigate = useNavigate();
-  //State to hold the form details that needs to be added .When user enters the values the state gets updated
-  const [state, setstate] = useState({
-    userid: "",
-    password: "",
-  });
-  //state to hold the individual validation errors of the form fields.
-  const [formErrors, setFormErrors] = useState({
-    userid: "",
-    password: "",
-  });
-  //state variable used to disable the button when any given form values is invalid.
-  const [valid, setValid] = useState(false);
-  //state variable to capture the success Message once the Login is completed successfully.
-  const [Message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const change = (event) => {
-    /*
-       1. This method will be invoked whenever the user changes the value of any form field. This method should also validate the form fields.
-       2. 'event' input parameter will contain both name and value of the form field.
-       3. Set state using the name and value recieved from event parameter 
-       */
-    // set the condition as it's a required field.
-    // set the condition as The length of the password should be between 8 and 12 characters
+  const [state, setstate] = useState({
+    email: "",
+    password: "",
+    errors: {}
+  });
+
+  const change = (e) => {
+    const { name, value } = e.target
+
+    setstate({ ...state, [name]: value })
+
   };
-  const handleSubmit = (event) => {
-    // 1. This method will be invoked when user clicks on 'Login' button.
-    // 2. You should prevent page reload on submit
-    // 3.  If all the form fields values are entered then make axios call to
-    // "http://localhost:4000/users/" and pass the appropriate state as data to the axios call
-    // 4. If the axios call is successful, assign the below string to successMessage state:
-    //    "user logged in successfully."
-    // 5. If the axios call is not successful, assign the error message to "Error while logging in"
+
+  const validateForm = () => {
+    let errors = {};
+    if (!state.email) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+      errors.email = 'Invalid email format';
+    }
+
+    if (!state.password) {
+      errors.password = 'Password is required';
+    } else if (state.password.length < 8) {
+      errors.password = 'Password Length must be greater than 8 characters';
+    } else {
+      const hasUppercase = /[A-Z]/.test(state.password);
+      const hasLowercase = /[a-z]/.test(state.password);
+      const hasNumber = /[0-9]/.test(state.password);
+      const hasSpecial = /[^a-zA-Z0-9]/.test(state.password);
+
+      if (!hasUppercase) {
+        errors.password = 'Password must contain at least one uppercase letter';
+      }
+      if (!hasLowercase) {
+        errors.password = 'Password must contain at least one lowercase letter';
+      }
+      if (!hasNumber) {
+        errors.password = 'Password must contain at least one number';
+      }
+      if (!hasSpecial) {
+        errors.password = 'Password must contain at least one special character';
+      }
+    }
+
+    return errors;
   };
+
+  // +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  const handleSubmit = async (e) => {
+    var datamatch = true
+    e.preventDefault()
+    const errors = validateForm();
+    setstate({ ...state, errors });
+
+
+    if (Object.keys(errors).length === 0) {
+      console.log("validation is correct")
+      try {
+        const userData = await axios.get(`http://localhost:3004/users`)
+        for (var data of userData.data) {
+          if (data.email === state.email && data.password === state.password) {
+            localStorage.setItem("name", data.name) //user name
+            localStorage.setItem("userId", data.id)//user id
+            alert("Please Refresh | successfully logged in")
+            navigate("/home")
+            datamatch = false
+            break
+          }
+        }
+        if (datamatch) {
+          errors.password="Invalid userId or password"
+          navigate('/login')
+        }
+      }
+      catch (err) { console.log(err) }
+    }
+
+  }
 
   return (
     <>
@@ -44,69 +93,38 @@ const Login = () => {
         <div>
           <br />
           <div
-            className="cards"
-            style={{
-              backgroundColor: "lavender",
-              width: "500px",
-              marginLeft: "600px",
-              marginBottom: "100px",
-            }}
-          >
+            className="cards" style={{ backgroundColor: "lavender", width: "500px", marginLeft: "600px", marginBottom: "100px", }}>
             <div className="card-body">
               <div className="row p-3">
                 <div className="col-lg-6 "></div>
+
+
                 <div style={{ backgroundColor: "#ebe7e7" }}>
-                  <form>
-                    {/*
-                1. Display successMessage or errorMessage after submission of form
-                2. Form should be controlled
-                3. Event handling methods should be binded appropriately
-                4. Invoke the appropriate method on form submission
-                */}
-                    <h3
-                      style={{
-                        textAlign: "center",
-                        fontFamily: "revert-layer",
-                        color: "brown",
-                      }}
-                    >
-                      Bonstay with us
-                    </h3>
+                  <form onSubmit={handleSubmit}>
+                    <h3 style={{ textAlign: "center", fontFamily: "revert-layer", color: "brown", }}>Bonstay with us</h3>
                     <div className="mb-2 mt-2">
-                      <label className="form-label">UserId:</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="userid"
-                      />
-                      {/* check whether userid error is set,if set display the corresponding error message using conditional rendering */}
+                      <label className="form-label">Email:</label>
+                      <input type="email" className="form-control" onChange={change} name="email" value={state.email} />
+                      {state.errors.email && (
+                        <span className="error" style={{ color: "red" }}>{state.errors.email}</span>
+                      )}
+
                     </div>
                     <div className="mb-2">
                       <label className="form-label">Password:</label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        name="password"
-                      />
-                      {/* check whether password error is set,if set display the corresponding error message using conditional rendering */}
+                      <input type="password" className="form-control" onChange={change} name="password" value={state.password} />
+                      {state.errors.password && (
+                        <span className="error" style={{ color: "red" }}>{state.errors.password}</span>
+                      )}
+
                     </div>
-                    {/* bind the disabled attribute to the button to the valid state variable */}
-                    <button
-                      type="submit"
-                      className="btn mb-2 d-block text-white"
-                      style={{
-                        backgroundColor: "#88685e",
-                        paddingRight: "20px",
-                        paddingLeft: "15px",
-                      }}
-                    >
-                      Login
+                    <button type="submit" style={{ border: "none", margin: "0px", padding: "0px" }} >
+                      <a className="btn mb-2 d-block text-white btn-primary" >Login</a>
                     </button>
                     <br />
-                    {/*Using the concept of conditional rendering,display success message, error messages related to required fields and axios calls */}
+
                     <div data-testid="Message" className="text-danger"></div>
-                    {/* create a link for Register page */}
-                    sign up to create a new account
+                    <Link to={"/Register"}>SignUp </Link>to create a new account
                   </form>
                 </div>
               </div>
@@ -117,5 +135,4 @@ const Login = () => {
     </>
   );
 };
-
 export default Login;
