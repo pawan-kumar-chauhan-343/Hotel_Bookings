@@ -1,137 +1,190 @@
-import React, { useState } from "react";
-//import axios from "axios";
-
-let url = "http://localhost:4000/bookings/";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Book = () => {
-  //State to hold the form details that needs to be added .When user enters the values the state gets updated
-  const [state, setState] = useState({
+  const hotelId = localStorage.getItem("hotelId") //From local storage
+  const hotelName = localStorage.getItem("hotelName") //From local storage
+  const userId = localStorage.getItem("userId")//From local storage
+  // =========================================
+  const navigate = useNavigate()
+  const [data, setData] = useState([]);
+  const [formData, setFormData] = useState({
     startDate: "",
     endDate: "",
     noOfPersons: "",
     noOfRooms: "",
     typeOfRoom: "",
+    hotelName: hotelName,
+    hotelId: hotelId,
+    userId: userId,
+    errors: {},
   });
-  //state to hold the individual validation errors of the form fields
-  const [formErrors, setFormErrors] = useState({
-    startDate: "",
-    endDate: "",
-    noOfPersons: "",
-    noOfRooms: "",
-    typeOfRoom: "",
-  });
-  // state variable used to disable the button when any of the given form values is invalid
-  const [valid, setValid] = useState(false);
-  //state variable to indicate whether user has given values to all the mandatory fields of the form.
-  const [mandatory, setMandatory] = useState(false);
-  //state variable to capture the success Message once the booking is completed successfully.
-  const [Message, setMessage] = useState("");
+
+  // ==========================================================
   const change = (event) => {
-    /*
-       1. This method will be invoked whenever the user changes the value of any form field. This method should also validate the form fields.
-       2. 'event' input parameter will contain both name and value of the form field.
-       3. Set state using the name and value recieved from event parameter 
-       */
-    //set the condition as the starting date should be after today's date.
-    //set the condition as the End date should be greater than or equal to start date.
-    // set the codition as the The number of persons should be greater than 0 and less than or equal to 5
-    //set the condition as The number of rooms should be greater than 0 and less than or equal to 3
+    const { name, value } = event.target;
+    // console.log(formData)
+    setFormData({
+      ...formData, [name]: value
+    });
+  };
+  // ==========================================================
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3004/hotels');
+      setData(response.data);
+      console.log(data)
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  //////////////////////////////////////////////////////////////
+
+  const validateDates = () => {
+    const today = new Date();
+    const startDate = new Date(formData.startDate);
+    const endDate = new Date(formData.endDate);
+
+    const errors = {};
+
+    if (!formData.startDate.trim() || startDate.getTime() < today.getTime()) {
+      errors.startDate = "Start date cannot be in the past.";
+    }
+
+    if (!formData.endDate.trim() || endDate.getTime() <= startDate.getTime()) {
+      errors.endDate = "End date must be after the start date.";
+    }
+
+    if (!formData.noOfPersons.trim() || formData.noOfPersons.length < 1) {
+      errors.noOfPersons = 'Number of person must be 1';
+    }
+
+    if (!formData.noOfRooms.trim() || formData.noOfRooms.length < 1) {
+      errors.noOfRooms = 'Number of room must be 1';
+    }
+
+    if (!formData.typeOfRoom.trim()) {
+      errors.typeOfRoom = 'Should Not Empty';
+    }
+
+    return errors;
   };
 
-  const handleSubmit = (event) => {
-    // 1. This method will be invoked when user clicks on 'Book' button.
-    // 2. You should prevent page reload on submit
-    // 3. check whether all the form fields are entered. If any of the form fields is not entered set the mandatory state variable to true.
-    // 4.  If all the form fields values are entered then make axios call to
-    // "http://localhost:4000/bookings/" and pass the appropriate state as data to the axios call
-    // 5. If the axios call is successful, assign the below string to successMessage state:
-    //   "Booking is successfully created with bookingId: " + <id>
-    // 6. If the axios call is not successful, assign the error message to "Something went wrong"
+
+
+  //////////////////////////////////////////////////////////////
+  // ==========================================================
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(formData)
+    var found = false
+    //Checking hotel id exist in hotels databse or not
+
+    const errors = validateDates();
+    setFormData({ ...formData, errors });
+
+
+    if (Object.keys(errors).length === 0) {
+
+      for (let hotel of data) {
+        if (hotel.id === hotelId) {
+          found = true;
+          localStorage.setItem("hotelName", hotel.hotelName);
+          break
+        }
+      }
+      // if data not exist in data base 
+      if (found) {
+        var handle = async () => {
+          try {
+            await axios.post(`http://localhost:3004/bookings`, formData)
+              .then(() => alert('Hotel Booked successfully'))
+              .then(() => navigate("/bookings"))
+              .catch((error) => alert(error.message))
+          } catch (error) {
+            alert(error.message);
+          }
+        }
+        handle()
+      }
+    }
+
+
+
+
+
   };
+  // ==========================================================
   return (
     <>
       <div>
         <div
-          className="container mt-3 text-start p-5"
-          style={{ width: "60%", fontSize: "14px" }}
+          className="container mt-3 text-start "
+          style={{ width: "60%", fontSize: "14px", color: "white" }}
         >
           <div className="row p-3">
             <div className="col-lg-6 "></div>
-            <div className="col-lg-6" style={{ backgroundColor: "#ebe7e7" }}>
-              <form>
+            <div className="col-lg-6" style={{ backgroundColor: "rgba(0, 0, 0, 0.807)" }}>
+              <form onSubmit={handleSubmit}>
                 {/*
                 1. Display successMessage or errorMessage after submission of form
                 2. Form should be controlled
                 3. Event handling methods should be binded appropriately
                 4. Invoke the appropriate method on form submission
                 */}
-                <div
-                  className="navbar-brand"
-                  style={{
-                    color: "brown",
-                    textAlign: "center",
-                    fontFamily: "sans-serif",
-                    fontWeight: "bolder",
-                    paddingTop: "25px",
-                    fontSize: "2em",
-                  }}
-                >
-                  Book a Room
-                </div>
+                <div className="navbar-brand btn d-block text-white" style={{ paddingTop: "20px", fontWeight: "900", fontSize: "25px" }} > Book a Room  </div>
 
-                <br />
-                <br />
+
                 <div className="mb-2 mt-2">
                   <label className="form-label">Start Date:</label>
-                  <input
-                    type="Date"
-                    className="form-control"
-                    name="startDate"
-                  />
+                  <input type="Date" className="form-control" onChange={change} name="startDate" value={formData.startDate} />
+                  {formData.errors.startDate && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.startDate} </span>}
+
                   {/* Check whether the start date error is set, if set display the corresponding error message using conditional rendering
                    */}
                 </div>
                 <div className="mb-2 mt-2">
                   <label className="form-label">End Date:</label>
-                  <input type="Date" className="form-control" name="endDate" />
+                  <input type="Date" className="form-control" onChange={change} name="endDate" value={formData.endDate} />
+                  {formData.errors.endDate && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.endDate} </span>}
+
                   {/* Check whether the end date error is set, if set display the corresponding error message using conditional rendering
                    */}
                 </div>
                 <div className="mb-2 mt-2">
                   <label className="form-label">No Of Persons:</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="noOfPersons"
-                  />
+                  <input type="number" className="form-control" onChange={change} name="noOfPersons" value={formData.noOfPersons} />
+                  {formData.errors.noOfPersons && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.noOfPersons} </span>}
+
                   {/* Check whether the noOfPersons error is set, if set display the corresponding error message using conditional rendering
                    */}
                 </div>
                 <div className="mb-2 mt-2">
                   <label className="form-label">No Of Rooms:</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="noOfRooms"
-                  />
+                  <input type="number" className="form-control" onChange={change} name="noOfRooms" value={formData.noOfRooms} />
+                  {formData.errors.noOfRooms && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.noOfRooms} </span>}
+
                   {/* Check whether the noOfRooms error is set, if set display the corresponding error message using conditional rendering
                    */}
                 </div>
                 <div className="mb-2">
                   <label className="form-label">Type of Rooms:</label>
-                  <select name="typeOfRoom" className="form-control">
+                  <select name="typeOfRoom" onChange={change} className="form-control" value={formData.typeOfRoom}>
                     <option value="">--select room type--</option>
                     <option value="AC">AC</option>
                     <option value="Non AC">Non AC</option>
                   </select>
+                  {formData.errors.typeOfRoom && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.typeOfRoom} </span>}
+
                   {/* Check whether the typeOfRoom error is set, if set display the corresponding error message using conditional rendering
                    */}
                 </div>
                 {/* Bind the disabled attribute to the button to the valid state variable */}
-                <button
-                  type="submit"
-                  className="btn mb-2 d-block text-white"
-                  style={{ backgroundColor: "#88685e" }}
-                >
+                <button type="submit" className="btn mb-2 d-block text-white btn-primary ps-5 pe-5" >
                   Book
                 </button>
                 {/*Using the concept of conditional rendering,display success message, error messages related to required fields and axios calls */}
@@ -149,3 +202,5 @@ const Book = () => {
 };
 
 export default Book;
+
+
