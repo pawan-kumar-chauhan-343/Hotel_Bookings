@@ -1,149 +1,273 @@
 {
-    "users": [
-      {
-        "id": 1,
-        "name": "Maria",
-        "address": "Bangalore,Karnataka",
-        "email": "maria@gmail.com",
-        "phoneNo": 1234567890,
-        "password": "maria123456"
-      },
-      {
-        "name": "Setna",
-        "address": "Bangalore",
-        "phoneNo": "1234567890",
-        "email": "setna@gmail.com",
-        "password": "Setna@123",
-        "id": 2
-      },
-      {
-        "name": "Sera",
-        "address": "bangalore",
-        "phoneNo": "1234567890",
-        "email": "sera@gmail.com",
-        "password": "Sera@1234",
-        "id": 3
-      },
-      {
-        "name": "Daisy",
-        "address": "Bangalore",
-        "phoneNo": "1234567890",
-        "email": "daisy@gmail.com",
-        "password": "Daisy@123",
-        "id": 4
+  "users": [
+    {
+      "id": "1",
+      "name": "Maria",
+      "address": "Bangalore,Karnataka",
+      "email": "maria@gmail.com",
+      "phoneNo": 1234567890,
+      "password": "maria123456"
+    },
+    {
+      "name": "Setna",
+      "address": "Bangalore",
+      "phoneNo": "1234567890",
+      "email": "setna@gmail.com",
+      "password": "Setna@123",
+      "id": "2"
+    },
+    {
+      "name": "Sera",
+      "address": "bangalore",
+      "phoneNo": "1234567890",
+      "email": "sera@gmail.com",
+      "password": "Sera@1234",
+      "id": "3"
+    },
+    {
+      "name": "Daisy",
+      "address": "Bangalore",
+      "phoneNo": "1234567890",
+      "email": "daisy@gmail.com",
+      "password": "Daisy@123",
+      "id": "4"
+    },
+    {
+      "id": "bfdd",
+      "name": "Pawan",
+      "address": "azamgarh",
+      "phoneNo": "1234567890",
+      "email": "pawan1@gmail.com",
+      "password": "Ppawan@12345"
+    },
+    {
+      "id": "9d5c",
+      "name": "pawa",
+      "address": "azamgarh",
+      "phoneNo": "12345678",
+      "email": "pawan11@gmail.com",
+      "password": "Ppawan@12345",
+      "errors": {
+        "password": "Password must contain at least one uppercase letter"
       }
-    ],
-    "hotels": [
-      {
-        "id": 1,
-        "hotelName": "Paradise Stay",
-        "city": "Bangalore",
-        "description": "A home to relax at the 'city' peek with all the facilities near you",
-        "amenities": "Different Cuisine Food, Swimming Pool, Self Cooking Station",
-        "phoneNo": 9090909090,
-        "address": "120/1C, Bangalore, Karnataka",
-        "imageUrl": "2.jpg",
-        "reviews": [
-          "Good Accomodation",
-          "Best place to relax with friends and family",
-          "The best place to chill with friends. ",
-          "The best place I ever visited."
-        ]
-      },
-      {
-        "id": 2,
-        "hotelName": "Hill Palace",
-        "city": "Kochi",
-        "description": "A cool place to relax at Lake side",
-        "amenities": "Homely Food, Sea Food, Children's Park, Boating",
-        "phoneNo": 9191919191,
-        "address": "90/1A, Kochi, Kerala",
-        "imageUrl": "3.jpg",
-        "reviews": [
-          "Must visit place. The cuisine available here is so amazing.",
-          "My favorite place to relax on my vacations"
-        ]
-      },
-      {
-        "id": 3,
-        "hotelName": "Monsoon Stay",
-        "city": "Chennai",
-        "description": "A luxurious but affordable stay as in your home",
-        "amenities": "24 hr Homely Food, Security, Children's Park",
-        "phoneNo": 9292929292,
-        "address": "100/1A, Chennai, Tamil Nadu",
-        "imageUrl": "4.jpg",
-        "reviews": []
-      },
-      {
-        "id": 4,
-        "hotelName": "Galaxy Paradise",
-        "city": "Mumbai",
-        "description": "An affordable family stay spot at the 'City' heart",
-        "amenities": "24 hr Homely Food, Swimming Pool, Security",
-        "phoneNo": 9393939393,
-        "address": "190/1B, Mumbai, Maharastra",
-        "imageUrl": "5.jpg",
-        "reviews": []
+    },
+    {
+      "id": "12d6",
+      "name": "mangesh",
+      "address": "pune tytytyty",
+      "phoneNo": "6261630921",
+      "email": "patanker@gmail.com",
+      "password": "Mp@123456",
+      "errors": {
+        "password": "Password must contain at least one uppercase letter"
       }
-    ],
-    "bookings": [
-      {
-        "id": 1,
-        "startDate": "2020-09-22",
-        "endDate": "2020-09-27",
-        "noOfPersons": 1,
-        "noOfRooms": 1,
-        "typeOfRoom": "AC",
-        "hotelName": "Paradise Stay",
-        "hotelId": 1,
-        "userId": 1
-      },
-      {
-        "startDate": "2020-09-23",
-        "endDate": "2020-09-24",
-        "noOfPersons": 1,
-        "noOfRooms": 1,
-        "typeOfRoom": "AC",
-        "hotelId": 1,
-        "hotelName": "Paradise Stay",
-        "userId": 1,
-        "id": 2,
-        "bookingId": "2"
-      },
-      {
-        "startDate": "2020-09-30",
-        "endDate": "2020-10-01",
-        "noOfPersons": 1,
-        "noOfRooms": 1,
-        "typeOfRoom": "AC",
-        "hotelId": 1,
-        "hotelName": "Paradise Stay",
-        "userId": 2,
-        "id": 3
-      },
-      {
-        "startDate": "2020-10-01",
-        "endDate": "2020-10-02",
-        "noOfPersons": 1,
-        "noOfRooms": 1,
-        "typeOfRoom": "AC",
-        "hotelId": 1,
-        "hotelName": "Paradise Stay",
-        "userId": 2,
-        "id": 4,
-        "bookingId": "4"
-      },
-      {
-        "startDate": "2020-09-25",
-        "endDate": "2020-09-26",
-        "noOfPersons": 1,
-        "noOfRooms": 1,
-        "typeOfRoom": "AC",
-        "hotelId": 2,
-        "hotelName": "Hill Palace",
-        "userId": 2,
-        "id": 5
+    }
+  ],
+  "hotels": [
+    {
+      "id": "1",
+      "hotelName": "Paradise Stay",
+      "city": "Bangalore",
+      "description": "A home to relax at the 'city' peek with all the facilities near you",
+      "amenities": "Different Cuisine Food, Swimming Pool, Self Cooking Station",
+      "phoneNo": 9090909090,
+      "address": "120/1C, Bangalore, Karnataka",
+      "imageUrl": [
+        "https://picsum.photos/400/300",
+        "https://picsum.photos/id/13/400/300",
+        "https://picsum.photos/id/23/400/300",
+        "https://picsum.photos/id/33/400/300"
+      ],
+      "review": {
+        "Maria": "Best place to relax with friends and family",
+        "Abhisehk": "The best place to chill with friends. ",
+        "mounika": "The best place I ever visited.",
+        "Ram": "wow very good hotel",
+        "pawan": "very nice hotel and food",
+        "Pawan": "nmnbv khh jugug oiug"
       }
-    ]
-  }
+    },
+    {
+      "id": "2",
+      "hotelName": "Hill Palace",
+      "city": "Kochi",
+      "description": "A cool place to relax at Lake side",
+      "amenities": "Homely Food, Sea Food, Children's Park, Boating",
+      "phoneNo": 9191919191,
+      "address": "90/1A, Kochi, Kerala",
+      "imageUrl": [
+        "https://picsum.photos/id/43/400/300",
+        "https://picsum.photos/id/53/400/300",
+        "https://picsum.photos/400/300",
+        "https://picsum.photos/id/63/400/300"
+      ],
+      "review": {
+        "Setna": "Must visit place. The cuisine available here is so amazing.",
+        "Abhishek": "My favorite place to relax on my vacations",
+        "Suresh": "good hotel\n",
+        "pawan": "it's vary good "
+      }
+    },
+    {
+      "id": "3",
+      "hotelName": "Monsoon Stay",
+      "city": "Chennai",
+      "description": "A luxurious but affordable stay as in your home",
+      "amenities": "24 hr Homely Food, Security, Children's Park",
+      "phoneNo": 9292929292,
+      "address": "100/1A, Chennai, Tamil Nadu",
+      "imageUrl": [
+        "https://picsum.photos/id/29/400/300",
+        "https://picsum.photos/id/39/400/300",
+        "https://picsum.photos/400/300",
+        "https://picsum.photos/id/19/400/300"
+      ],
+      "review": {
+        "pawan": "nice hotel and food",
+        "Pawan": "very good and helthy food"
+      }
+    },
+    {
+      "id": "4",
+      "hotelName": "Galaxy Paradise",
+      "city": "Mumbai",
+      "description": "An affordable family stay spot at the 'City' heart",
+      "amenities": "24 hr Homely Food, Swimming Pool, Security",
+      "phoneNo": 9393939393,
+      "address": "190/1B, Mumbai, Maharastra",
+      "imageUrl": [
+        "https://picsum.photos/id/79/400/300",
+        "https://picsum.photos/400/300",
+        "https://picsum.photos/id/49/400/300",
+        "https://picsum.photos/id/89/400/300"
+      ],
+      "review": {
+        "Ram": "you are a good developer",
+        "Daisy": "nice hotel and food",
+        "Pawan": "it's very big hotel and good food"
+      }
+    }
+  ],
+  "bookings": [
+    {
+      "id": "1",
+      "startDate": "2020-09-22",
+      "endDate": "2020-09-27",
+      "noOfPersons": 1,
+      "noOfRooms": 1,
+      "typeOfRoom": "AC",
+      "hotelName": "Paradise Stay",
+      "hotelId": 1,
+      "userId": 1
+    },
+    {
+      "startDate": "2020-09-23",
+      "endDate": "2020-09-24",
+      "noOfPersons": 1,
+      "noOfRooms": 1,
+      "typeOfRoom": "AC",
+      "hotelId": 1,
+      "hotelName": "Paradise Stay",
+      "userId": 1,
+      "id": "2",
+      "bookingId": "2"
+    },
+    {
+      "startDate": "2020-09-30",
+      "endDate": "2020-10-01",
+      "noOfPersons": 1,
+      "noOfRooms": 1,
+      "typeOfRoom": "AC",
+      "hotelId": 1,
+      "hotelName": "Paradise Stay",
+      "userId": 2,
+      "id": "3"
+    },
+    {
+      "startDate": "2020-10-01",
+      "endDate": "2020-10-02",
+      "noOfPersons": 1,
+      "noOfRooms": 1,
+      "typeOfRoom": "AC",
+      "hotelId": 1,
+      "hotelName": "Paradise Stay",
+      "userId": 2,
+      "id": "4",
+      "bookingId": "4"
+    },
+    {
+      "startDate": "2020-09-25",
+      "endDate": "2020-09-26",
+      "noOfPersons": 1,
+      "noOfRooms": 1,
+      "typeOfRoom": "AC",
+      "hotelId": 2,
+      "hotelName": "Hill Palace",
+      "userId": 2,
+      "id": "5"
+    },
+    {
+      "id": "1f96",
+      "startDate": "2024-06-22",
+      "endDate": "2024-06-30",
+      "noOfPersons": "4",
+      "noOfRooms": "6",
+      "typeOfRoom": "AC",
+      "hotelName": "Paradise Stay",
+      "hotelId": "1",
+      "userId": "7e5f"
+    },
+    {
+      "id": "b0b8",
+      "startDate": "2024-06-15",
+      "endDate": "2024-06-16",
+      "noOfPersons": "1",
+      "noOfRooms": "1",
+      "typeOfRoom": "AC",
+      "hotelName": "Paradise Stay",
+      "hotelId": "4",
+      "userId": "bfdd",
+      "errors": {
+        "typeOfRoom": "Should Not Empty"
+      }
+    },
+    {
+      "id": "1ad9",
+      "startDate": "2024-06-29",
+      "endDate": "2024-06-30",
+      "noOfPersons": "4",
+      "noOfRooms": "1",
+      "typeOfRoom": "AC",
+      "hotelName": "Hill Palace",
+      "hotelId": "2",
+      "userId": "bfdd",
+      "errors": {
+        "endDate": "End date must be after the start date."
+      }
+    },
+    {
+      "id": "f1da",
+      "startDate": "2024-11-21",
+      "endDate": "2024-11-25",
+      "noOfPersons": "4",
+      "noOfRooms": "2",
+      "typeOfRoom": "AC",
+      "hotelName": "Hill Palace",
+      "hotelId": "1",
+      "userId": "bfdd",
+      "errors": {}
+    },
+    {
+      "id": "4140",
+      "startDate": "2024-06-19",
+      "endDate": "2024-06-29",
+      "noOfPersons": "1",
+      "noOfRooms": "1",
+      "typeOfRoom": "Non AC",
+      "hotelName": null,
+      "hotelId": "1",
+      "userId": "pawan1@gmail.com",
+      "errors": {}
+    }
+  ]
+}
