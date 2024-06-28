@@ -1,142 +1,191 @@
-import React from "react";
-import { useState } from "react";
-//import axios from "axios";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Register = () => {
-  //const navigate = useNavigate();
-  //State to hold the form details that needs to be added .When user enters the values the state gets updated
-  const [state, setState] = useState({
+  const navigate = useNavigate()
+  const [message, setMessage] = useState(false)
+  const [data, setData] = useState([]);
+  const [formData, setFormData] = useState({
     name: "",
     address: "",
     phoneNo: "",
     email: "",
     password: "",
+    errors: {},
   });
-  //state to hold the individual validation errors of the form fields.
-  const [formErrors, setFormErrors] = useState({
-    name: "",
-    address: "",
-    phoneNo: "",
-    email: "",
-    password: "",
-  });
-  //state variable used to disable the button when any given form values is invalid.
-  const [valid, setValid] = useState(false);
-  //state variable to indicate whether user has given values to all the mandatory fields of the form.
-  const [mandatory, setMandatory] = useState(false);
-  //state variable to capture the success Message once the registration is completed successfully.
-  const [successMessage, setSuccessMessage] = useState("");
+
+
 
   const change = (event) => {
-    /*
-       1. This method will be invoked whenever the user changes the value of any form field. This method should also validate the form fields.
-       2. 'event' input parameter will contain both name and value of the form field.
-       3. Set state using the name and value recieved from event parameter 
-       */
-    
-    
-      // set the condition as The length of the name should be minimum 3 character.
-    
-      // set the condition as required field.
-   
-      // set the condition as the Phone number should have 10 digits.
-    
-      // set the condition as the Email should match the basic email format.
-    
-      // set the condition as The length of the password should be between 8 and 12 characters
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
-  const handleSubmit = (event) => {
-    // 1. This method will be invoked when user clicks on 'Register' button.
-    // 2. You should prevent page reload on submit
-    // 3. check whether all the form fields are entered. If any of the form fields is not entered set the mandatory state variable to true.
-    // 4.  If all the form fields values are entered then make axios call to
-    // "http://localhost:4000/users/" and pass the appropriate state as data to the axios call
-    // 5. If the axios call is successful, assign the below string to successMessage state:
-    //    "User registered successfully with the id "+ <id>
-    // 6. If the axios call is not successful, assign the error message to "Error while registering user"
+
+  const validateForm = () => {
+    let errors = {};
+
+    if (!formData.name.trim() || formData.name.length < 4) {
+      errors.name = 'Name is required and should be atleast 4 char';
+      console.log('Name is required')
+    }
+
+    if (!formData.address.trim() || formData.address.length < 5) {
+      errors.address = 'Address is required and should be atleast 5 char';
+
+    }
+
+    if (!formData.phoneNo) {
+      errors.phoneNo = 'Phone number is required and number must be 10 characters long';
+    } else if (!(formData.phoneNo.length == 10)) {
+      errors.phoneNo = `Phone number must be 10 characters long`;
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Invalid Email';
+    }
+
+    if (!formData.password) {
+      errors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      errors.password = 'Password Length must be greater than 8 characters';
+    } else {
+      const hasUppercase = /[A-Z]/.test(formData.password);
+      const hasLowercase = /[a-z]/.test(formData.password);
+      const hasNumber = /[0-9]/.test(formData.password);
+      const hasSpecial = /[^a-zA-Z0-9]/.test(formData.password);
+
+      if (!hasUppercase) {
+        errors.password = 'Password must contain at least one uppercase letter';
+      }
+      if (!hasLowercase) {
+        errors.password = 'Password must contain at least one lowercase letter';
+      }
+      if (!hasNumber) {
+        errors.password = 'Password must contain at least one number';
+      }
+      if (!hasSpecial) {
+        errors.password = 'Password must contain at least one special character';
+      }
+    }
+
+
+    return errors;
+
+  }
+
+  // ==============Done Above============================================
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3004/users');
+      setData(response.data);
+      console.log(data)
+    } catch (error) {
+      alert(error.message);
+    }
   };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // ==========================================================
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    var found = false
+    const errors = validateForm();
+    setFormData({ ...formData, errors });
+
+    if (Object.keys(errors).length === 0) {
+
+      console.log("validation is correct")
+      try {
+        //Checking data exist in database or not
+        for (let user of data) {
+          if (user.email === formData.email) {
+            found = true
+            setMessage(true)
+            break
+          }
+        }
+        // if data not exist in data base 
+        if (!found) {
+          async function handle(e) {
+
+            await axios.post(`http://localhost:3004/users`, formData)
+              .then((res) => alert('Data updated successfully'))
+              .then(() => navigate("/login"))
+              .catch((error) => alert(error.message))
+          }
+          handle()
+
+          // ===============================================
+        }else{
+          errors.password="User Already have an account"
+        }
+      }
+      catch (err) { 
+        alert("Faild to Login ")
+       }
+    }
+
+
+
+
+  }
+
+
+
   return (
     <>
       <div>
-        <div
-          className="container mt-3 text-start p-5"
-          style={{ width: "60%", fontSize: "14px" }}
-        >
+        <div className="container mt-3 text-start p-5" style={{ width: "60%", fontSize: "14px" }} >
           <div className="row p-3">
             <div className="col-lg-6 "></div>
             <div className="col-lg-6" style={{ backgroundColor: "#ebe7e7" }}>
-              <form>
-                {/*
-                1. Display successMessage or errorMessage after submission of form
-                2. Form should be controlled
-                3. Event handling methods should be binded appropriately
-                4. Invoke the appropriate method on form submission
-                */}
+              <form onSubmit={handleSubmit}>
+                {message && <h2 style={{ color: "red" }}>Already have Accound <i><NavLink to="/login">Login </NavLink></i> </h2>}
                 <div className="mb-2 mt-2">
                   <label className="form-label">Name:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="name"
-                    
-                  />
-                  {/* check whether name error is set,if set display the corresponding error message using conditional rendering */}
+                  <input type="text" className="form-control" name="name" value={formData.name} onChange={change} />
+                  {formData.errors.name && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.name} </span>}
+
                 </div>
                 <div className="mb-2 mt-2">
                   <label className="form-label">Address:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="address"
-                    
-                  />
-                  {/* check whether address error is set,if set display the corresponding error message using conditional rendering */}
+                  <input type="text" className="form-control" name="address" value={formData.address} onChange={change} />
+                  {formData.errors.address && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.address} </span>}
+
                 </div>
                 <div className="mb-2 mt-2">
                   <label className="form-label">PhoneNo:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="phoneNo"
-                    
-                  />
-                  {/* check whether phoneNo error is set,if set display the corresponding error message using conditional rendering */}
+                  <input type="text" className="form-control" name="phoneNo" value={formData.phoneNo} onChange={change} />
+                  {formData.errors.phoneNo && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.phoneNo} </span>}
+
                 </div>
                 <div className="mb-2 mt-2">
                   <label className="form-label">Email:</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    
-                  />
-                  {/* check whether email error is set,if set display the corresponding error message using conditional rendering */}
+                  <input type="email" className="form-control" name="email" value={formData.email} onChange={change} />
+                  {formData.errors.email && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.email} </span>}
+
                 </div>
                 <div className="mb-2">
                   <label className="form-label">Password:</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    
-                  />
-                  {/* check whether password error is set,if set display the corresponding error message using conditional rendering */}
+                  <input type="password" className="form-control" name="password" value={formData.password} onChange={change} />
+                  {formData.errors.password && <span className="error-message errmes" style={{ color: "red" }}> {formData.errors.password} </span>}
                 </div>
-                {/* bind the disabled attribute to the button to the valid state variable */}
-                <button
-                  type="submit"
-                  className="btn mb-2 d-block text-white"
-                  style={{ backgroundColor: "#88685e" }}
-                >
+                <button type="submit" className="btn mb-2 d-block text-white" style={{ backgroundColor: "#88685e" }} >
                   Register
                 </button>
                 <br />
-                {/*Using the concept of conditional rendering,display success message, error messages related to required fields and axios calls */}
-                {/* {if the form fields are not entered then set the message as 'Enter all the form fields'} */}
                 <div data-testid="mandatory" className="text-danger"></div>
                 <div data-testid="successMessage" className="text-danger"></div>
-                {/* create a link for Login page */}
-                Login with your existing account
+                <NavLink to="/login">Login </NavLink> with your existing account
               </form>
             </div>
           </div>
